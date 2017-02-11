@@ -2,8 +2,8 @@
 #include <Ethernet.h>
 
 //unique mac address for the arduino
-byte mac[] = { 0x90, 0xA2, 0xDA, 0x00, 0x59, 0x67 };
-IPAddress ip( 192, 168, 0, 106 ); //local ip, should be unique
+byte mac[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+IPAddress ip( 192, 168, 0, 0 ); //local ip, should be unique
 IPAddress gateway( 192, 168, 0, 1 ); //get with ipconfig
 IPAddress subnet( 255, 255, 255, 0 );
 
@@ -38,29 +38,16 @@ void loop()
   openedDoorCounter = openedDoorCounter % 2;
   Serial.println(buttonState);
   if (buttonState == HIGH) {
-    //Serial.println("on");
     digitalWrite(ledPin, HIGH);
   }
   else {
-    //openedDoorCounter++;
-    //Serial.println("off");
     digitalWrite(ledPin, LOW);
     if(openedDoor[0] == 0 && openedDoor[1] == 0){
         while(!sendEmail()){
           Serial.println("Email sent");
           }
       }
-    /*if (openedDoorCounter % 2 == 0) {
-      openedDoorCounter = 0;
-      if (sendEmail()) {
-        Serial.println("Email sent");
-        delay(10000);
-      }
-      else {
-        Serial.println("Email failed");
-        sendEmail();
-      }
-    }*/
+    
    
   }
   delay(1000);
@@ -81,17 +68,17 @@ byte sendEmail()
   if (!eRcv()) return 0;
 
   // change this ip to your public ip
-  client.write("helo 130.225.244.180\r\n");
+  client.write("helo 0.0.0.0\r\n");
 
   if (!eRcv()) return 0;
 
   // from email
-  client.write("MAIL From: <arduinohomealert@gmail.com>\r\n");
+  client.write("MAIL From: <sample@gmail.com>\r\n");
 
   if (!eRcv()) return 0;
 
   // to email
-  client.write("RCPT To: <hristobak@gmail.com>\r\n");
+  client.write("RCPT To: <sample@gmail.com>\r\n");
 
   if (!eRcv()) return 0;
 
@@ -100,14 +87,14 @@ byte sendEmail()
   if (!eRcv()) return 0;
 
   //change this
-  client.write("To: You <hristobak@gmail.com>\r\n");
+  client.write("To: You <sample@gmail.com>\r\n");
 
   // change this
-  client.write("From: Me <arduinohomealert@gmail.com>\r\n");
+  client.write("From: Me <sample@gmail.com>\r\n");
 
   client.write("Subject: Arduino home alarm\r\n");
 
-  client.write("The front door is opened bitch!\r\n");
+  client.write("The front door is opened!\r\n");
 
   client.write(".\r\n");
 
